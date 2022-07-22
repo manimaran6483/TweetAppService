@@ -1,5 +1,6 @@
 package com.tweetapp.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -37,16 +38,30 @@ public class TweetAppServiceUtil {
 		user.setPassword(request.getPassword());
 		user.setLoginId(request.getLoginId());
 		user.setContactNumber(request.getContactNumber());
-		
+		user.setRegisteredDate(getCurrentDate());
 		return user;
 	}
 
+	public static String getCurrentDate() {
+		SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY HH:MM:SS");
+		Date date = new Date();
+		return sdf.format(date);
+	}
+	
 	public static void populateMessages(List<Message> messages,String code,String message,String description) {
 		Message msg = new Message();
 		msg.setCode(code);
 		msg.setDescription(description);
 		msg.setMessage(message);
 		messages.add(msg); 
+	}
+
+	public static boolean validatePassword(String password, String password2) {
+		if(password.contentEquals(password2)) {
+			return true;
+		}
+		return false;
+		
 	}
 }
 

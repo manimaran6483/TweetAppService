@@ -23,6 +23,7 @@ public class User {
 
 	private String contactNumber;
 	
+	private String registeredDate;
 
 	public String getUserId() {
 		return userId;
@@ -84,6 +85,14 @@ public class User {
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
 				+ ", loginId=" + loginId + ", password=" + password + ", contactNumber=" + contactNumber + "]";
+	}
+
+	public String getRegisteredDate() {
+		return registeredDate;
+	}
+
+	public void setRegisteredDate(String registeredDate) {
+		this.registeredDate = registeredDate;
 	}
 
 }

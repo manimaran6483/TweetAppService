@@ -40,6 +40,7 @@ public class LoginController {
 	
 	
 	@PostMapping(TweetAppConstants.REGISTER_PATH)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
 		LOGGER.debug( NAME + ": registeruser - start" + transactionId);
@@ -71,6 +72,7 @@ public class LoginController {
 	}
 	
 	@PostMapping(TweetAppConstants.FORGOTPASSWORD_PATH)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private ResponseEntity<ForgotPasswordResponse> forgotPassword(@PathVariable String username, @Valid @RequestBody ForgotPasswordRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
 		LOGGER.debug( NAME + ": forgotPassword - start" + transactionId);
