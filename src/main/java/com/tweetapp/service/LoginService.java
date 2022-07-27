@@ -1,19 +1,22 @@
 package com.tweetapp.service;
 
+
 import com.tweetapp.model.request.ForgotPasswordRequest;
 import com.tweetapp.model.request.LoginRequest;
 import com.tweetapp.model.request.RegisterRequest;
-import com.tweetapp.model.response.ForgotPasswordResponse;
-import com.tweetapp.model.response.LoginResponse;
-import com.tweetapp.model.response.RegisterResponse;
+import com.tweetapp.model.response.UserResponse;
 
 public interface LoginService {
 
-	RegisterResponse registerUser(RegisterRequest request);
+	UserResponse registerUser(RegisterRequest request);
 	
-	LoginResponse loginUser(LoginRequest request);
+	UserResponse loginUser(LoginRequest request);
 	
-	ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request, String username);
+	UserResponse forgotPassword(ForgotPasswordRequest request, String username);
 
 	void deleteUser(String id);
+
+	UserResponse getAllUsers();
+
+	UserResponse searchByUserName(String username);
 }

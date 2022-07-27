@@ -1,10 +1,21 @@
 package com.tweetapp.model.request;
 
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.tweetapp.model.common.composite.RequestHeader;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+
+@Data
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequest {
 
 	private RequestHeader requestHeader;
@@ -17,27 +28,4 @@ public class LoginRequest {
 	@NotBlank(message = "Mandatory Field - password should not be blank")
 	private String password;
 	
-	public RequestHeader getRequestHeader() {
-		return requestHeader;
-	}
-
-	public void setRequestHeader(RequestHeader requestHeader) {
-		this.requestHeader = requestHeader;
-	}
-
-	public String getLoginID() {
-		return loginID;
-	}
-
-	public void setLoginID(String loginID) {
-		this.loginID = loginID;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 }

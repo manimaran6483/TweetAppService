@@ -1,10 +1,19 @@
 package com.tweetapp.model.common.composite;
 
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.tweetapp.model.common.atomic.Consumer;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+@Data
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class RequestHeader {
 
 	private Consumer consumer = new Consumer();
@@ -12,18 +21,6 @@ public class RequestHeader {
 	@NotNull(message = "Mandatory Field - transactionId should not be null")
 	@NotBlank(message = "Mandatory Field - transactionId should not be blank")
 	private String transactionId;
-	public Consumer getConsumer() {
-		return consumer;
-	}
-	public void setConsumer(Consumer consumer) {
-		this.consumer = consumer;
-	}
-	public String getTransactionId() {
-		return transactionId;
-	}
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
 	
 
 }

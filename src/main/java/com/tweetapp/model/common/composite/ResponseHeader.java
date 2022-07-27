@@ -1,16 +1,17 @@
 package com.tweetapp.model.common.composite;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResponseHeader {
 
 	private TransactionNotification transactionNotification = new TransactionNotification();
 
-	public TransactionNotification getTransactionNotification() {
-		return transactionNotification;
-	}
-
-	public void setTransactionNotification(TransactionNotification transactionNotification) {
-		this.transactionNotification = transactionNotification;
-	}
-	
-	
 }

@@ -7,6 +7,15 @@ import javax.validation.constraints.Size;
 
 import com.tweetapp.model.common.composite.RequestHeader;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegisterRequest {
 
 	private RequestHeader requestHeader;
@@ -42,54 +51,6 @@ public class RegisterRequest {
 	@Size(max = 10,min = 10,message = "Mandatory Field - Length should be 10")
 	private String contactNumber;
 	
-	public RequestHeader getRequestHeader() {
-		return requestHeader;
-	}
-	public void setRequestHeader(RequestHeader requestHeader) {
-		this.requestHeader = requestHeader;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getEmailId() {
-		return emailId;
-	}
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
-	public String getLoginId() {
-		return loginId;
-	}
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
-	public String getContactNumber() {
-		return contactNumber;
-	}
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
-	}
 	
 	
 }

@@ -1,5 +1,6 @@
 package com.tweetapp.model.entity;
 
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,29 +9,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Document(collection = "UserDetails")
+@Document(collection = "Tweet")
 @Data
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Tweet {
 
 	@Id
+	private String id;
+	
+	private String tweet;
+	
+	private String tag;
+	
+	private String postedDate;
+	
+	private String updateDate;
+	
 	private String userId;
 	
-	private String firstName;
+	private String likeCount;
 	
-	private String lastName;
+	private String replyCount;
+
 	
-	private String emailId;
-
-	private String loginId;
-
-	private String password;
-
-	private String contactNumber;
-	
-	private String registeredDate;
-
-
 }
