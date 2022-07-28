@@ -90,13 +90,13 @@ public class LoginController {
 		return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete/{id}")
-	private ResponseEntity<String> deleteId(@PathVariable String id){
-		
-		loginService.deleteUser(id);
-		
-		return new ResponseEntity<String>("Deleted", HttpStatus.OK);
-	}
+//	@DeleteMapping("/delete/{id}")
+//	private ResponseEntity<String> deleteId(@PathVariable String id){
+//		
+//		loginService.deleteUser(id);
+//		
+//		return new ResponseEntity<String>("Deleted", HttpStatus.OK);
+//	}
 	
 	@GetMapping(TweetAppConstants.GET_ALL_USERS_PATH)
 	private ResponseEntity<UserResponse> getAllUsers(@RequestHeader("transactionId") String transactionId) {

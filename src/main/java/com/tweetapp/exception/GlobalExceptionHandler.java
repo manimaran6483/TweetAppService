@@ -18,7 +18,7 @@ import com.tweetapp.model.response.UserResponse;
 import com.tweetapp.util.TweetAppServiceUtil;
 
 @RestControllerAdvice
-public class CustomExceptionClass {
+public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Object> handleMethodArgumentException(

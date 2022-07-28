@@ -124,10 +124,10 @@ public class LoginServiceImpl implements LoginService {
 		return response;
 	}
 
-	@Override
-	public void deleteUser(String id) {
-		userRepo.deleteById(id);
-	}
+//	@Override
+//	public void deleteUser(String id) {
+//		userRepo.deleteById(id);
+//	}
 
 	@Override
 	public UserResponse getAllUsers() {

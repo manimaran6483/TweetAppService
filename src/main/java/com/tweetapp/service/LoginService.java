@@ -14,7 +14,7 @@ public interface LoginService {
 	
 	UserResponse forgotPassword(ForgotPasswordRequest request, String username);
 
-	void deleteUser(String id);
+	//void deleteUser(String id);
 
 	UserResponse getAllUsers();
 

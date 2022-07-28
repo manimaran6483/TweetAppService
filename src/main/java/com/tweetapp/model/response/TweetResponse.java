@@ -6,11 +6,13 @@ import com.tweetapp.model.common.composite.ResponseHeader;
 import com.tweetapp.model.entity.Tweet;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Getter
+@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
