@@ -20,6 +20,12 @@ import com.tweetapp.util.TweetAppServiceUtil;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	
+	/**
+	 * 
+	 *	provides custom exception message for MethodArgumentNotValidException
+	 *	@param methodArgumentNotValidException 
+	*/
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Object> handleMethodArgumentException(
 			MethodArgumentNotValidException methodArgumentNotValidException) {
@@ -39,11 +45,16 @@ public class GlobalExceptionHandler {
 		
 	}
 	
+	/**
+	 * 
+	 *	provides custom exception message for MissingRequestHeaderException
+	 *	@param missingRequestHeaderException 
+	*/
 	@ExceptionHandler(MissingRequestHeaderException.class)
-	public ResponseEntity<Object> handleMissingHeaderException(MissingRequestHeaderException exception){
+	public ResponseEntity<Object> handleMissingHeaderException(MissingRequestHeaderException missingRequestHeaderException){
 		UserResponse response = new UserResponse();
 		List<Message> messages = new ArrayList<Message>();
-		TweetAppServiceUtil.populateMessages(messages, "400", "Bad Request", exception.getMessage());
+		TweetAppServiceUtil.populateMessages(messages, "400", "Bad Request", missingRequestHeaderException.getMessage());
 		TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "2", "WARNING", messages);
 		
 		HttpHeaders responseHeaders = new HttpHeaders();

@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tweetapp.constants.TweetAppConstants;
@@ -30,11 +30,21 @@ import com.tweetapp.repository.UserRepository;
 import com.tweetapp.service.TweetService;
 import com.tweetapp.util.TweetAppServiceUtil;
 
+/**
+ * This class provides business logic for User functionalities
+ * 
+ * @author Manimaran
+ *
+ */
+
 @Service
 public class TweetServiceImpl implements TweetService {
 
-	private static final Logger LOGGER = LogManager.getLogger(TweetServiceImpl.class);
+	private KafkaTemplate<String, String> kafkaTemplate;
 
+	@Value("${tweetapp.kafka.topic}")
+	private String TOPIC = "";
+	
 	private static final String NAME = "TweetServiceImpl";
 
 	@Autowired
@@ -49,10 +59,16 @@ public class TweetServiceImpl implements TweetService {
 	@Autowired
 	private TweetReplyRepository replyRepo;
 
+	/**
+	 * 
+	 *	calls tweet repository to retrieve all tweets
+	 *	
+	*/
+	
 	@Override
 	public TweetResponse getAllTweets() {
 
-		LOGGER.debug(NAME + " getAllTweets start");
+		kafkaTemplate.send(TOPIC, NAME + " getAllTweets start");
 		TweetResponse response = new TweetResponse();
 		List<Message> messages = new ArrayList<>();
 		List<Tweet> tweetList = tweetRepo.findAll();
@@ -68,13 +84,19 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		LOGGER.debug(NAME + " getAllTweets end");
+		kafkaTemplate.send(TOPIC, NAME + " getAllTweets end");
 		return response;
 	}
 
+	
+	/**
+	 * 
+	 *	calls tweet repository to retrieve all tweets for a user
+	 *	@param username
+	*/
 	@Override
 	public TweetResponse getTweetsForUser(String username) {
-		LOGGER.debug(NAME + " getTweetsForUser start");
+		kafkaTemplate.send(TOPIC, NAME + " getTweetsForUser start");
 		TweetResponse response = new TweetResponse();
 		List<Message> messages = new ArrayList<>();
 		User user = userRepo.findByLoginId(username);
@@ -96,13 +118,19 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		LOGGER.debug(NAME + " getTweetsForUser end");
+		kafkaTemplate.send(TOPIC, NAME + " getTweetsForUser end");
 		return response;
 	}
 
+	
+	/**
+	 * 
+	 *	call tweet repository to post a tweet
+	 *	@param request
+	*/
 	@Override
 	public TweetResponse postTweet(TweetRequest request) {
-		LOGGER.debug(NAME + " postTweet start ");
+		kafkaTemplate.send(TOPIC, NAME + " postTweet start ");
 		TweetResponse response = new TweetResponse();
 		List<Message> messages = new ArrayList<>();
 		Tweet tweet = TweetAppServiceUtil.postTweet(request);
@@ -125,13 +153,20 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		LOGGER.debug(NAME + " postTweet end");
+		kafkaTemplate.send(TOPIC, NAME + " postTweet end");
 		return response;
 	}
 
+	
+	/**
+	 * 
+	 *	call tweet repository to update a tweet
+	 *	@param request
+	 *  @param tweetId
+	*/
 	@Override
 	public TweetResponse updateTweet(TweetRequest request, String tweetId) {
-		LOGGER.debug(NAME + " updateTweet start ");
+		kafkaTemplate.send(TOPIC, NAME + " updateTweet start ");
 		TweetResponse response = new TweetResponse();
 		List<Message> messages = new ArrayList<>();
 		Optional<Tweet> tweetById = tweetRepo.findById(tweetId);
@@ -154,13 +189,19 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		LOGGER.debug(NAME + " updateTweet end");
+		kafkaTemplate.send(TOPIC, NAME + " updateTweet end");
 		return response;
 	}
 
+	
+	/**
+	 * 
+	 *	call tweet repository to delete a tweet
+	 *	@param tweetId
+	*/
 	@Override
 	public TweetResponse deleteTweet(String tweetId) {
-		LOGGER.debug(NAME + " updateTweet start ");
+		kafkaTemplate.send(TOPIC, NAME + " updateTweet start ");
 		TweetResponse response = new TweetResponse();
 		List<Message> messages = new ArrayList<>();
 		Optional<Tweet> tweetById = tweetRepo.findById(tweetId);
@@ -175,13 +216,18 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		LOGGER.debug(NAME + " updateTweet end");
+		kafkaTemplate.send(TOPIC, NAME + " updateTweet end");
 		return response;
 	}
 
+	/**
+	 * 
+	 *	call tweetlike repository to like a tweet
+	 *	@param request
+	*/
 	@Override
 	public TweetResponse likeTweet(LikeRequest request) {
-		LOGGER.debug(NAME + " likeTweet start ");
+		kafkaTemplate.send(TOPIC, NAME + " likeTweet start ");
 		TweetResponse response = new TweetResponse();
 		List<Message> messages = new ArrayList<>();
 		Optional<Tweet> tweetById = tweetRepo.findById(request.getTweetId());
@@ -190,7 +236,7 @@ public class TweetServiceImpl implements TweetService {
 			TweetLike twt = tweetLikeRepo.save(tweetLike);
 			if (twt != null) {
 				Tweet tweet = TweetAppServiceUtil.incrementLikeCount(tweetById.get());
-				Tweet tw = tweetRepo.save(tweet);
+				tweetRepo.save(tweet);
 				TweetAppServiceUtil.populateMessages(messages, "200", "Success", "Tweet Like Updated - "+ twt.getId());
 				TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "0", "SUCCESS", messages);
 			} else {
@@ -204,16 +250,20 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		LOGGER.debug(NAME + " likeTweet end");
+		kafkaTemplate.send(TOPIC, NAME + " likeTweet end");
 		return response;
 
 	}
 
 	
-
+	/**
+	 * 
+	 *	call tweetlike repository to unlike a tweet
+	 *	@param request
+	*/
 	@Override
 	public TweetResponse unlikeTweet(@Valid LikeRequest request) {
-		LOGGER.debug(NAME +" unlikeTweet start ");
+		kafkaTemplate.send(TOPIC, NAME +" unlikeTweet start ");
 		TweetResponse response = new TweetResponse();
 		List<Message> messages = new ArrayList<>();
 		Optional<Tweet> tweetById = tweetRepo.findById(request.getTweetId());
@@ -236,13 +286,19 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(),"1","FAILURE",messages);
 		}
 		
-		LOGGER.debug(NAME +" unlikeTweet end");
+		kafkaTemplate.send(TOPIC, NAME +" unlikeTweet end");
 		return response;
 	}
 
+	
+	/**
+	 * 
+	 *	call reply repository to reply a tweet
+	 *	@param request
+	*/
 	@Override
 	public ReplyResponse replyTweet(ReplyRequest request) {
-		LOGGER.debug(NAME + " likeTweet start ");
+		kafkaTemplate.send(TOPIC, NAME + " likeTweet start ");
 		ReplyResponse response = new ReplyResponse();
 		List<Message> messages = new ArrayList<>();
 		Optional<Tweet> tweetById = tweetRepo.findById(request.getTweetId());
@@ -265,7 +321,7 @@ public class TweetServiceImpl implements TweetService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		LOGGER.debug(NAME + " likeTweet end");
+		kafkaTemplate.send(TOPIC, NAME + " likeTweet end");
 		return response;	}
 
 }

@@ -12,15 +12,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tweetapp.controller.LoginController;
-import com.tweetapp.controller.TweetController;
 import com.tweetapp.model.common.atomic.Message;
 import com.tweetapp.model.common.composite.Remarks;
 import com.tweetapp.model.common.composite.RequestHeader;
@@ -43,6 +42,9 @@ public class LoginControllerTest {
 	
 	@Mock
 	private LoginService loginService;
+	
+	@Mock
+	private KafkaTemplate<String, String> kafkaTemplate;
 
 	private ObjectMapper mapper = new ObjectMapper();
 	//@SuppressWarnings("deprecation")
@@ -56,6 +58,7 @@ public class LoginControllerTest {
 	@Test
 	public void testRegister() throws Exception{
 		Mockito.when(loginService.registerUser(Mockito.any())).thenReturn(validUserResponse("200","SUCCESS"));
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		 RegisterRequest request = new RegisterRequest(new RequestHeader(), "test", "test", "abc@email.com", "testt2343", "test", "test", "9999999999");
 		 
 		
@@ -72,6 +75,7 @@ public class LoginControllerTest {
 	@Test
 	public void testRegisterException() throws Exception{
 		Mockito.when(loginService.registerUser(Mockito.any())).thenThrow(new RuntimeException());
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		RegisterRequest request = new RegisterRequest(new RequestHeader(), "test", "test", "abc@email.com", "testt2343", "test", "test", "9999999999");
 		 
 		
@@ -86,6 +90,7 @@ public class LoginControllerTest {
 	@Test
 	public void testLogin() throws Exception{
 		Mockito.when(loginService.loginUser(Mockito.any())).thenReturn(validUserResponse("200","SUCCESS"));
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		 LoginRequest request = new LoginRequest(new RequestHeader(),"test","test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/login").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -97,6 +102,7 @@ public class LoginControllerTest {
 	@Test
 	public void testLoginException() throws Exception{
 		Mockito.when(loginService.loginUser(Mockito.any())).thenThrow(new RuntimeException());
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		 LoginRequest request = new LoginRequest(new RequestHeader(),"test","test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/login").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -108,6 +114,7 @@ public class LoginControllerTest {
 	@Test
 	public void testForgotPassword() throws Exception{
 		Mockito.when(loginService.forgotPassword(Mockito.any(),Mockito.any())).thenReturn(validUserResponse("200","SUCCESS"));
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		ForgotPasswordRequest request = new ForgotPasswordRequest(new RequestHeader(), "test", "test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/{username}/forgot","test").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -119,6 +126,7 @@ public class LoginControllerTest {
 	@Test
 	public void testForgotPasswordException() throws Exception{
 		Mockito.when(loginService.forgotPassword(Mockito.any(),Mockito.any())).thenThrow(new RuntimeException());
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		ForgotPasswordRequest request = new ForgotPasswordRequest(new RequestHeader(), "test", "test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/{username}/forgot","test").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -130,6 +138,7 @@ public class LoginControllerTest {
 	@Test
 	public void getAllUsers() throws Exception{
 		Mockito.when(loginService.getAllUsers()).thenReturn(validUserResponse("200","SUCCESS"));
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		MvcResult result =  mockMvc.perform(MockMvcRequestBuilders.get("/users/all").header("transactionId", "test").accept(MediaType.APPLICATION_JSON)).andReturn();
 		String status = String.valueOf(result.getResponse().getStatus());
 		assertEquals("200", status);
@@ -139,6 +148,7 @@ public class LoginControllerTest {
 	@Test
 	public void getAllUsersException() throws Exception{
 		Mockito.when(loginService.getAllUsers()).thenThrow(new RuntimeException());
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/all").header("transactionId", "test").accept(MediaType.APPLICATION_JSON)).andReturn();
 		String status = String.valueOf(result.getResponse().getStatus());
 		assertEquals("200", status);
@@ -148,6 +158,7 @@ public class LoginControllerTest {
 	@Test
 	public void searchUser() throws Exception{
 		Mockito.when(loginService.searchByUserName(Mockito.any())).thenReturn(validUserResponse("200","SUCCESS"));
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		MvcResult result =  mockMvc.perform(MockMvcRequestBuilders.get("/user/search/{username}","test").header("transactionId", "test").accept(MediaType.APPLICATION_JSON)).andReturn();
 		String status = String.valueOf(result.getResponse().getStatus());
 		assertEquals("200", status);
@@ -157,6 +168,7 @@ public class LoginControllerTest {
 	@Test
 	public void searchUserException() throws Exception{
 		Mockito.when(loginService.searchByUserName(Mockito.any())).thenThrow(new RuntimeException());
+		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/search/{username}","test").header("transactionId", "test").accept(MediaType.APPLICATION_JSON)).andReturn();
 		String status = String.valueOf(result.getResponse().getStatus());
 		assertEquals("200", status);
