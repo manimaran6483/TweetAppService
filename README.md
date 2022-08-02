@@ -1,10 +1,12 @@
 									TWEET APP SERVICE
 	
 Springboot application will run in port 8081.
+
+Swagger Link - http://localhost:8081/api/v1.0/tweets/swagger-ui/index.html
 	
 	Configuration Needed : 
 
-MongoDB in port 27017 with UserDetails,Tweet,TweetLike,TweetReply DB's.
+MongoDB in port 27017 with UserDetails,Tweet,TweetLike,TweetReply Collection in TweetApp DB.
 
 Kafka server in port 9092 with topic tweetapplogs.
 

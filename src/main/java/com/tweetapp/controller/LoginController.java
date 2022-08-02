@@ -78,6 +78,7 @@ public class LoginController {
 		String transactionId = request.getRequestHeader().getTransactionId();
 		kafkaTemplate.send(TOPIC, NAME + " : loginUser - start - " + transactionId);
 		UserResponse response = new UserResponse();
+		kafkaTemplate.send(TOPIC,loginService.toString());
 		try {
 			kafkaTemplate.send(TOPIC,NAME + " Request : " + new ObjectMapper().writeValueAsString(request));
 			response = loginService.loginUser(request);
@@ -145,6 +146,7 @@ public class LoginController {
 			kafkaTemplate.send(TOPIC,NAME + " Username from path : " + username);
 			 response = loginService.searchByUserName(username);
 		}catch(Exception e) {
+			kafkaTemplate.send(TOPIC,e.toString());
 			kafkaTemplate.send(TOPIC,"Exception Occurred in "+ NAME + " - " + " - " +e.getMessage() + " - " + transactionId);
 		}
 		

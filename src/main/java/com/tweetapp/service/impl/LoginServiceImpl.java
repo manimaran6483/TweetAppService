@@ -32,6 +32,7 @@ import com.tweetapp.util.TweetAppServiceUtil;
 @Service
 public class LoginServiceImpl implements LoginService {
 
+	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
 
 	@Value("${tweetapp.kafka.topic}")
