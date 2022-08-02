@@ -1,10 +1,11 @@
 						TWEET APP SERVICE
 	
-Springboot application will run in port 8081.
 
-Swagger Link - http://localhost:8081/api/v1.0/tweets/swagger-ui/index.html
+To run this app on docker, use docker-compose.yml -> Navigate to root folder of app -> open command prompt -> docker-compose up
 	
-	Configuration Needed : 
+	Configuration Needed to run locally: 
+
+Springboot application will run in port 8081.
 
 MongoDB in port 27017 with UserDetails,Tweet,TweetLike,TweetReply Collection in TweetApp DB.
 
@@ -14,6 +15,7 @@ Logs are stored in config/logs/tweet-app-service.log file which will be the inpu
 
 Application is monitored using Prometheus and Grafana.
 
+Swagger Link - http://localhost:8081/api/v1.0/tweets/swagger-ui/index.html
 
 	Steps to start Zookeeper and Kafka Server :
 
