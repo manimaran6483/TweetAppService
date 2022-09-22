@@ -4,6 +4,8 @@ package com.tweetapp.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -22,12 +24,9 @@ import com.tweetapp.util.TweetAppServiceUtil;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
 	
-	@Value("${tweetapp.kafka.topic}")
-	private String TOPIC = "";
+	
+	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	
 	/**
 	 * 
@@ -39,7 +38,7 @@ public class GlobalExceptionHandler {
 			MethodArgumentNotValidException methodArgumentNotValidException) {
 		String error = methodArgumentNotValidException.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
 		List<Message> messages = new ArrayList<Message>();
-		kafkaTemplate.send(TOPIC, "MethodArgumentNotValidException - {}",error);
+		log.debug( "MethodArgumentNotValidException - {}",error);
 		if(methodArgumentNotValidException.getMessage().contains("LoginController")) {
 			UserResponse response = new UserResponse();
 			TweetAppServiceUtil.populateMessages(messages, "400", "Bad Request", error);
@@ -65,7 +64,7 @@ public class GlobalExceptionHandler {
 		List<Message> messages = new ArrayList<Message>();
 		TweetAppServiceUtil.populateMessages(messages, "400", "Bad Request", missingRequestHeaderException.getMessage());
 		TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "2", "WARNING", messages);
-		kafkaTemplate.send(TOPIC, "MissingRequestHeaderException ");
+		log.debug( "MissingRequestHeaderException ");
 		HttpHeaders responseHeaders = new HttpHeaders();
 	    responseHeaders.set("Message", 
 	      "No transaction Id");

@@ -35,15 +35,12 @@ public class LoginServiceTest {
 	@Mock
 	private UserRepository userRepo;
 	
-	@Mock
-	private KafkaTemplate<String, String> kafkaTemplate;
-	
 	@Test
 	public void getAllUsers() {
 		List<User> userList = new ArrayList<>();
 		userList.add(new User("test", "test", "test", "test", "test", "test", "test", "test"));
 		Mockito.when(userRepo.findAll()).thenReturn(userList);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		UserResponse response = loginService.getAllUsers();
 		
 		Assert.assertEquals("SUCCESS",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -54,7 +51,7 @@ public class LoginServiceTest {
 		List<User> userList = new ArrayList<>();
 		userList.add(new User("test", "test", "test", "test", "test", "test", "test", "test"));
 		Mockito.when(userRepo.findAll()).thenReturn(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		UserResponse response = loginService.getAllUsers();
 		
 		Assert.assertEquals("FAILURE",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -65,7 +62,7 @@ public class LoginServiceTest {
 		List<User> userList = new ArrayList<>();
 		userList.add(new User("test", "test", "test", "test", "test", "test", "test", "test"));
 		Mockito.when(userRepo.searchUserByUsername(Mockito.any())).thenReturn(userList);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		UserResponse response = loginService.searchByUserName("test");
 		
 		Assert.assertEquals("SUCCESS",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -76,7 +73,7 @@ public class LoginServiceTest {
 		List<User> userList = new ArrayList<>();
 		userList.add(new User("test", "test", "test", "test", "test", "test", "test", "test"));
 		Mockito.when(userRepo.searchUserByUsername(Mockito.any())).thenReturn(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		UserResponse response = loginService.searchByUserName("test");
 		Assert.assertEquals("FAILURE",response.getResponseHeader().getTransactionNotification().getStatus());
 	}
@@ -86,7 +83,7 @@ public class LoginServiceTest {
 		
 		LoginRequest request = new LoginRequest(new RequestHeader(),"test","test");
 		String password = TweetAppServiceUtil.encodePassword("test");
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.findByLoginId(Mockito.anyString())).thenReturn(new User("test","test","test","test","test",password,"test","test"));
 		UserResponse response = loginService.loginUser(request);
 		
@@ -97,7 +94,7 @@ public class LoginServiceTest {
 	public void testLoginuserINternalServerError() {
 		
 		LoginRequest request = new LoginRequest(new RequestHeader(),"test","test");
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.findByLoginId(Mockito.anyString())).thenReturn(new User("test","test","test","test","test","test","test","test"));
 		UserResponse response = loginService.loginUser(request);
 		
@@ -108,7 +105,7 @@ public class LoginServiceTest {
 	public void testLoginuserNoDAta() {
 		
 		LoginRequest request = new LoginRequest(new RequestHeader(),"test","test");
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.findByLoginId(Mockito.anyString())).thenReturn(null);
 		UserResponse response = loginService.loginUser(request);
 		
@@ -122,7 +119,7 @@ public class LoginServiceTest {
 		ForgotPasswordRequest request = new ForgotPasswordRequest(new RequestHeader(),"test","test");
 		Mockito.when(userRepo.findByLoginId(Mockito.anyString())).thenReturn(new User());
 		Mockito.when(userRepo.save(Mockito.any())).thenReturn(new User());
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		UserResponse response = loginService.forgotPassword(request,"test");
 		
 		Assert.assertEquals("SUCCESS", response.getResponseHeader().getTransactionNotification().getStatus());
@@ -133,7 +130,7 @@ public class LoginServiceTest {
 		ForgotPasswordRequest request = new ForgotPasswordRequest(new RequestHeader(),"test","test");		
 		Mockito.when(userRepo.findByLoginId(Mockito.anyString())).thenReturn(new User());
 		Mockito.when(userRepo.save(Mockito.any())).thenReturn(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		UserResponse response = loginService.forgotPassword(request,"test");
 		Assert.assertEquals("FAILURE", response.getResponseHeader().getTransactionNotification().getStatus());
 	}
@@ -143,7 +140,7 @@ public class LoginServiceTest {
 		ForgotPasswordRequest request = new ForgotPasswordRequest(new RequestHeader(),"test","test");		
 		Mockito.when(userRepo.findByLoginId(Mockito.anyString())).thenReturn(null);
 		Mockito.when(userRepo.save(Mockito.any())).thenReturn(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		UserResponse response = loginService.forgotPassword(request,"test");
 		Assert.assertEquals("NO DATA FOUND", response.getResponseHeader().getTransactionNotification().getRemarks().getMessages().get(0).getDescription());
 	}
@@ -151,7 +148,7 @@ public class LoginServiceTest {
 	@Test
 	public void testRegisterUser() {
 		
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.existsByEmailId(Mockito.any())).thenReturn(false);
 		Mockito.when(userRepo.existsByLoginId(Mockito.any())).thenReturn(false);
 		Mockito.when(userRepo.save(Mockito.any())).thenReturn(new User());
@@ -165,7 +162,7 @@ public class LoginServiceTest {
 	@Test
 	public void testRegisterUserEmailPresent() {
 		
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.existsByEmailId(Mockito.any())).thenReturn(true);
 		Mockito.when(userRepo.existsByLoginId(Mockito.any())).thenReturn(false);
 		Mockito.when(userRepo.save(Mockito.any())).thenReturn(new User());
@@ -179,7 +176,7 @@ public class LoginServiceTest {
 	@Test
 	public void testRegisterUserLoginIdPresent() {
 		
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.existsByEmailId(Mockito.any())).thenReturn(false);
 		Mockito.when(userRepo.existsByLoginId(Mockito.any())).thenReturn(true);
 		Mockito.when(userRepo.save(Mockito.any())).thenReturn(new User());
@@ -194,7 +191,7 @@ public class LoginServiceTest {
 	@Test
 	public void testRegisterUserINternalServerError() {
 		
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.existsByEmailId(Mockito.any())).thenReturn(false);
 		Mockito.when(userRepo.existsByLoginId(Mockito.any())).thenReturn(false);
 		Mockito.when(userRepo.save(Mockito.any())).thenReturn(null);

@@ -29,12 +29,11 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       
   tweetapp:
-    image: manimaran6483/tweetapp-1.0
+    image: manimaran6483/tweetapp-final:v1
     container_name: tweetapp
     links:
       - zookeeper
       - kafka
-      - tweetappmongodb
     depends_on:
       - kafka
     ports:
@@ -50,13 +49,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-  tweetappmongodb:
-    image: mongo
-    container_name: tweetappmongodb
-    ports:
-      - 27017:27017
-    networks:
-      - kafka_network
 
 networks:
   kafka_network:

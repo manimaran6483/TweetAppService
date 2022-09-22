@@ -2,11 +2,11 @@ package com.tweetapp.controller;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,29 +40,25 @@ public class TweetController {
 	private static final String NAME = "TweetController-Log";
 
 	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
-
-	@Value("${tweetapp.kafka.topic}")
-	private String TOPIC = "";
-
-	@Autowired
 	private TweetService tweetService;
 
+	private static final Logger log = LoggerFactory.getLogger(TweetController.class);
+	
 	/**
 	REST URL to retrive all tweets
 	@param transactionId
 	*/
 	@GetMapping(TweetAppConstants.GET_ALL_TWEETS_PATH)
 	private ResponseEntity<TweetResponse> getAllTweets(@RequestHeader("transactionId") String transactionId) {
-		kafkaTemplate.send(TOPIC, NAME + ": getAllTweets - start - " + transactionId);
+		log.debug( NAME + ": getAllTweets - start - " + transactionId);
 		TweetResponse response = new TweetResponse();
 		try {
 			response = tweetService.getAllTweets();
 		} catch (Exception e) {
-			kafkaTemplate.send(TOPIC, "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
+			log.debug( "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + ": getAllTweets - end - " + transactionId);
+		log.debug( NAME + ": getAllTweets - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -76,15 +72,15 @@ public class TweetController {
 	@GetMapping(TweetAppConstants.GET_TWEETS_OF_USER_PATH)
 	private ResponseEntity<TweetResponse> getAllTweetsForUser(@PathVariable(name = "username") String username,
 			@RequestHeader("transactionId") String transactionId) {
-		kafkaTemplate.send(TOPIC, NAME + ": getAllTweets - start - " + transactionId);
+		log.debug( NAME + ": getAllTweets - start - " + transactionId);
 		TweetResponse response = new TweetResponse();
 		try {
 			response = tweetService.getTweetsForUser(username);
 		} catch (Exception e) {
-			kafkaTemplate.send(TOPIC, "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
+			log.debug( "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + ": getAllTweets - end - " + transactionId);
+		log.debug( NAME + ": getAllTweets - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -100,15 +96,15 @@ public class TweetController {
 	private ResponseEntity<TweetResponse> postTweet(@PathVariable(name = "username") String username,
 			@Valid @RequestBody TweetRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
-		kafkaTemplate.send(TOPIC, NAME + ": postTweet - start - " + transactionId);
+		log.debug( NAME + ": postTweet - start - " + transactionId);
 		TweetResponse response = new TweetResponse();
 		try {
 			response = tweetService.postTweet(request);
 		} catch (Exception e) {
-			kafkaTemplate.send(TOPIC, "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
+			log.debug( "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + ": postTweet - end - " + transactionId);
+		log.debug( NAME + ": postTweet - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
@@ -125,15 +121,15 @@ public class TweetController {
 	private ResponseEntity<TweetResponse> updateTweet(@PathVariable(name = "username") String username,
 			@PathVariable(name = "id") String tweetId, @Valid @RequestBody TweetRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
-		kafkaTemplate.send(TOPIC, NAME + ": updateTweet - start - " + transactionId);
+		log.debug( NAME + ": updateTweet - start - " + transactionId);
 		TweetResponse response = new TweetResponse();
 		try {
 			response = tweetService.updateTweet(request, tweetId);
 		} catch (Exception e) {
-			kafkaTemplate.send(TOPIC, "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
+			log.debug( "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + ": updateTweet - end  - " + transactionId);
+		log.debug( NAME + ": updateTweet - end  - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -148,15 +144,15 @@ public class TweetController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private ResponseEntity<Object> deleteTweet(@PathVariable(name = "username") String username,
 			@PathVariable(name = "id") String tweetId, @RequestHeader("transactionId") String transactionId) {
-		kafkaTemplate.send(TOPIC, NAME + ": deleteTweet - start - " + transactionId);
+		log.debug( NAME + ": deleteTweet - start - " + transactionId);
 		TweetResponse response = new TweetResponse();
 		try {
 			response = tweetService.deleteTweet(tweetId);
 		} catch (Exception e) {
-			kafkaTemplate.send(TOPIC, "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
+			log.debug( "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + ": deleteTweet - end - " + transactionId);
+		log.debug( NAME + ": deleteTweet - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
 	}
@@ -171,7 +167,7 @@ public class TweetController {
 	private ResponseEntity<Object> likeTweet(@PathVariable("id") String tweetId,
 			@Valid @RequestBody LikeRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
-		kafkaTemplate.send(TOPIC, NAME + ": likeTweet - start - " + transactionId);
+		log.debug( NAME + ": likeTweet - start - " + transactionId);
 		TweetResponse response = new TweetResponse();
 		try {
 			if (request.getLikeFlag().equalsIgnoreCase("Y")) {
@@ -181,10 +177,10 @@ public class TweetController {
 			}
 
 		} catch (Exception e) {
-			kafkaTemplate.send(TOPIC, "Exception Occurred in " + NAME +" - " +  e.getMessage() + " - " + transactionId);
+			log.debug( "Exception Occurred in " + NAME +" - " +  e.getMessage() + " - " + transactionId);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + ": likeTweet - end - " + transactionId);
+		log.debug( NAME + ": likeTweet - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
@@ -199,16 +195,16 @@ public class TweetController {
 	private ResponseEntity<Object> replyTweet(@PathVariable("id") String tweetId,
 			@Valid @RequestBody ReplyRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
-		kafkaTemplate.send(TOPIC, NAME + ": replyTweet - start - " + transactionId);
+		log.debug( NAME + ": replyTweet - start - " + transactionId);
 		ReplyResponse response = new ReplyResponse();
 		try {
 			response = tweetService.replyTweet(request);
 
 		} catch (Exception e) {
-			kafkaTemplate.send(TOPIC, "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
+			log.debug( "Exception Occurred in " + NAME + " - " + e.getMessage() + " - " + transactionId);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + ": replyTweet - end - " + transactionId);
+		log.debug( NAME + ": replyTweet - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}

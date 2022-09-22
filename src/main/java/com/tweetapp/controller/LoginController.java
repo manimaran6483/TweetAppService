@@ -3,11 +3,11 @@ package com.tweetapp.controller;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +26,8 @@ import com.tweetapp.model.request.RegisterRequest;
 import com.tweetapp.model.response.UserResponse;
 import com.tweetapp.service.LoginService;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * This class configures rest endpoints w.r.t User
@@ -41,14 +43,9 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 	
-	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
-	
-	@Value("${tweetapp.kafka.topic}")
-	private String TOPIC = "";
-	
 	private static final String NAME = "LoginController-Log";
 	
+	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 	/**
 	REST URL to register a user
 	@param request
@@ -57,16 +54,16 @@ public class LoginController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
-		kafkaTemplate.send(TOPIC, NAME + " : registeruser - start - " + transactionId);
+		log.debug( NAME + " : registeruser - start - " + transactionId);
 		UserResponse response = new UserResponse();
 		try {
-			kafkaTemplate.send(TOPIC,NAME + " -  Request : " + new ObjectMapper().writeValueAsString(request));
+			log.debug(NAME + " -  Request : " + new ObjectMapper().writeValueAsString(request));
 			response = loginService.registerUser(request);
 		}catch(Exception e) {
-			kafkaTemplate.send(TOPIC,"Exception Occurred in "+ NAME +" - " + e.getMessage() +" - " + transactionId);
+			log.debug("Exception Occurred in "+ NAME +" - " + e.getMessage() +" - " + transactionId);
 		}
 		
-		kafkaTemplate.send(TOPIC, NAME + " : registeruser - end - " + transactionId);
+		log.debug( NAME + " : registeruser - end - " + transactionId);
 		return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
 	}
 	
@@ -78,17 +75,17 @@ public class LoginController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private ResponseEntity<UserResponse> loginUser(@Valid @RequestBody LoginRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
-		kafkaTemplate.send(TOPIC, NAME + " : loginUser - start - " + transactionId);
+		log.debug( NAME + " : loginUser - start - " + transactionId);
 		UserResponse response = new UserResponse();
-		kafkaTemplate.send(TOPIC,loginService.toString());
+		log.debug(loginService.toString());
 		try {
-			kafkaTemplate.send(TOPIC,NAME + " Request : " + new ObjectMapper().writeValueAsString(request));
+			log.debug(NAME + " Request : " + new ObjectMapper().writeValueAsString(request));
 			response = loginService.loginUser(request);
 		}catch(Exception e) {
-			kafkaTemplate.send(TOPIC,"Exception Occurred in "+ NAME +" - " + e.getMessage() + " - " +transactionId);
+			log.debug("Exception Occurred in "+ NAME +" - " + e.getMessage() + " - " +transactionId);
 		}
 		
-		kafkaTemplate.send(TOPIC, NAME + ": loginUser - end - " + transactionId);
+		log.debug( NAME + ": loginUser - end - " + transactionId);
 		return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
 	}
 	
@@ -101,16 +98,16 @@ public class LoginController {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private ResponseEntity<UserResponse> forgotPassword(@PathVariable String username, @Valid @RequestBody ForgotPasswordRequest request) {
 		String transactionId = request.getRequestHeader().getTransactionId();
-		kafkaTemplate.send(TOPIC, NAME + " : forgotPassword - start - " + transactionId);
+		log.debug( NAME + " : forgotPassword - start - " + transactionId);
 		UserResponse response = new UserResponse();
 		try {
-			kafkaTemplate.send(TOPIC,NAME + " Request : " + new ObjectMapper().writeValueAsString(request));
+			log.debug(NAME + " Request : " + new ObjectMapper().writeValueAsString(request));
 			response = loginService.forgotPassword(request,username);
 		}catch(Exception e) {
-			kafkaTemplate.send(TOPIC,"Exception Occurred in "+ NAME +" - " + e.getMessage() +" - " + transactionId);
+			log.debug("Exception Occurred in "+ NAME +" - " + e.getMessage() +" - " + transactionId);
 		}
 		
-		kafkaTemplate.send(TOPIC, NAME + ": forgotPassword - end - " + transactionId);
+		log.debug( NAME + ": forgotPassword - end - " + transactionId);
 		return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
 	}
 	
@@ -120,15 +117,15 @@ public class LoginController {
 	*/
 	@GetMapping(TweetAppConstants.GET_ALL_USERS_PATH)
 	private ResponseEntity<UserResponse> getAllUsers(@RequestHeader("transactionId") String transactionId) {
-		kafkaTemplate.send(TOPIC, NAME + ": getAllUsers - start - " + transactionId);
+		log.debug( NAME + ": getAllUsers - start - " + transactionId);
 		UserResponse response = new UserResponse();
 		try {
 			 response = loginService.getAllUsers();
 		}catch(Exception e) {
-			kafkaTemplate.send(TOPIC,"Exception Occurred in "+ NAME + " - " + e.getMessage() + " - " + transactionId);
+			log.debug("Exception Occurred in "+ NAME + " - " + e.getMessage() + " - " + transactionId);
 		}
 		
-		kafkaTemplate.send(TOPIC, NAME + ": getAllUsers - end - " + transactionId);
+		log.debug( NAME + ": getAllUsers - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 		
@@ -142,17 +139,17 @@ public class LoginController {
 	*/
 	@GetMapping(TweetAppConstants.SEARCH_USER_PATH)
 	private ResponseEntity<UserResponse> searchUserByLoginId(@PathVariable(name = "username") String username,@RequestHeader("transactionId") String transactionId) {
-		kafkaTemplate.send(TOPIC, NAME + ": searchUserByLoginId - start - " + transactionId);
+		log.debug( NAME + ": searchUserByLoginId - start - " + transactionId);
 		UserResponse response = new UserResponse();
 		try {
-			kafkaTemplate.send(TOPIC,NAME + " Username from path : " + username);
+			log.debug(NAME + " Username from path : " + username);
 			 response = loginService.searchByUserName(username);
 		}catch(Exception e) {
-			kafkaTemplate.send(TOPIC,e.toString());
-			kafkaTemplate.send(TOPIC,"Exception Occurred in "+ NAME + " - " + " - " +e.getMessage() + " - " + transactionId);
+			log.debug(e.toString());
+			log.debug("Exception Occurred in "+ NAME + " - " + " - " +e.getMessage() + " - " + transactionId);
 		}
 		
-		kafkaTemplate.send(TOPIC, NAME + ": searchUserByLoginId - end - " + transactionId);
+		log.debug( NAME + ": searchUserByLoginId - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

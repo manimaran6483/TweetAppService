@@ -16,7 +16,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 
 
 @Configuration
-@EnableKafka
+//@EnableKafka
 public class KafkaConsumerConfig {
 
 	private static final Logger LOGGER = LogManager.getLogger(KafkaConsumerConfig.class);
@@ -26,9 +26,9 @@ public class KafkaConsumerConfig {
 	@param message
 	*/
 	
-	@KafkaListener(topics = "${tweetapp.kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
-	public void consume(String message) {
-		LOGGER.debug(message);
-	}
+//	@KafkaListener(topics = "${tweetapp.kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
+//	public void consume(String message) {
+//		LOGGER.debug(message);
+//	}
 
 }

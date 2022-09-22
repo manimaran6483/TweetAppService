@@ -3,9 +3,9 @@ package com.tweetapp.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tweetapp.constants.TweetAppConstants;
@@ -32,17 +32,12 @@ import com.tweetapp.util.TweetAppServiceUtil;
 @Service
 public class LoginServiceImpl implements LoginService {
 
-	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
-
-	@Value("${tweetapp.kafka.topic}")
-	private String TOPIC = "";
-
 	private static final String NAME = "LoginServiceImpl-Log";
 
 	@Autowired
 	private UserRepository userRepo;
 
+	private static final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
 	
 	/**
 	 * 
@@ -52,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public UserResponse registerUser(RegisterRequest request) {
 
-		kafkaTemplate.send(TOPIC, NAME + " : registeruser service - saveUser start - " + request.getRequestHeader().getTransactionId());
+		log.debug( NAME + " : registeruser service - saveUser start - " + request.getRequestHeader().getTransactionId());
 
 		UserResponse response = new UserResponse();
 		List<Message> messages = new ArrayList<>();
@@ -89,7 +84,7 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + " : registeruser service - saveUser end - " + request.getRequestHeader().getTransactionId());
+		log.debug( NAME + " : registeruser service - saveUser end - " + request.getRequestHeader().getTransactionId());
 		response.getResponseHeader().getTransactionNotification()
 				.setTransactionId(request.getRequestHeader().getTransactionId());
 
@@ -103,7 +98,7 @@ public class LoginServiceImpl implements LoginService {
 	*/
 	@Override
 	public UserResponse loginUser(LoginRequest request) {
-		kafkaTemplate.send(TOPIC, NAME + " : Login service - start - " + request.getRequestHeader().getTransactionId());
+		log.debug( NAME + " : Login service - start - " + request.getRequestHeader().getTransactionId());
 		UserResponse response = new UserResponse();
 		List<Message> messages = new ArrayList<>();
 		User user = userRepo.findByLoginId(request.getLoginID());
@@ -126,7 +121,7 @@ public class LoginServiceImpl implements LoginService {
 					TweetAppConstants.NO_DATA_FOUND_MSG, TweetAppConstants.NO_DATA_FOUND_MSG);
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
-		kafkaTemplate.send(TOPIC, NAME + " : Login service - end - " + request.getRequestHeader().getTransactionId());
+		log.debug( NAME + " : Login service - end - " + request.getRequestHeader().getTransactionId());
 		response.getResponseHeader().getTransactionNotification()
 				.setTransactionId(request.getRequestHeader().getTransactionId());
 
@@ -142,7 +137,7 @@ public class LoginServiceImpl implements LoginService {
 	*/
 	@Override
 	public UserResponse forgotPassword(ForgotPasswordRequest request, String username) {
-		kafkaTemplate.send(TOPIC, NAME + " : forgotPassword service - start - " + request.getRequestHeader().getTransactionId());
+		log.debug( NAME + " : forgotPassword service - start - " + request.getRequestHeader().getTransactionId());
 		UserResponse response = new UserResponse();
 		ResponseHeader responseHeader = new ResponseHeader();
 		response.setResponseHeader(responseHeader);
@@ -164,7 +159,7 @@ public class LoginServiceImpl implements LoginService {
 					TweetAppConstants.NO_DATA_FOUND_MSG, TweetAppConstants.NO_DATA_FOUND_MSG);
 			TweetAppServiceUtil.populateResponseHeader(responseHeader, "1", "FAILURE", messages);
 		}
-		kafkaTemplate.send(TOPIC, NAME + " : forgotPassword service - end - " + request.getRequestHeader().getTransactionId());
+		log.debug( NAME + " : forgotPassword service - end - " + request.getRequestHeader().getTransactionId());
 		response.getResponseHeader().getTransactionNotification()
 				.setTransactionId(request.getRequestHeader().getTransactionId());
 		return response;
@@ -177,7 +172,7 @@ public class LoginServiceImpl implements LoginService {
 	*/
 	@Override
 	public UserResponse getAllUsers() {
-		kafkaTemplate.send(TOPIC, NAME + " getAllUsers start");
+		log.debug( NAME + " getAllUsers start");
 		UserResponse response = new UserResponse();
 		List<Message> messages = new ArrayList<>();
 		List<User> userList = userRepo.findAll();
@@ -191,7 +186,7 @@ public class LoginServiceImpl implements LoginService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + " getAllUsers end");
+		log.debug( NAME + " getAllUsers end");
 		return response;
 	}
 
@@ -203,7 +198,7 @@ public class LoginServiceImpl implements LoginService {
 	*/
 	@Override
 	public UserResponse searchByUserName(String username) {
-		kafkaTemplate.send(TOPIC, NAME + " searchByUserName start - " + username);
+		log.debug( NAME + " searchByUserName start - " + username);
 		UserResponse response = new UserResponse();
 		List<Message> messages = new ArrayList<>();
 		List<User> userList = userRepo.searchUserByUsername(username);
@@ -218,7 +213,7 @@ public class LoginServiceImpl implements LoginService {
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "1", "FAILURE", messages);
 		}
 
-		kafkaTemplate.send(TOPIC, NAME + " searchByUserName end - " + username);
+		log.debug( NAME + " searchByUserName end - " + username);
 		return response;
 
 	}

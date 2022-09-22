@@ -53,10 +53,6 @@ public class TweetServiceTest {
 	@Mock
 	private TweetReplyRepository replyRepo;
 	
-	@Mock
-	private KafkaTemplate<String,String> kafkaTemplate;
-	
-	
 	
 	@Test
 	public void testGetAllTweetsSuccess() {
@@ -64,7 +60,7 @@ public class TweetServiceTest {
 		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test","test"));
 		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
 		Mockito.when(tweetRepo.findAll()).thenReturn(tweetList);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		TweetResponse response = tweetService.getAllTweets();
 		
 		Assert.assertEquals("SUCCESS",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -72,7 +68,7 @@ public class TweetServiceTest {
 	@Test
 	public void testGetAllTweetsFail() {
 		Mockito.when(tweetRepo.findAll()).thenReturn(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		TweetResponse response = tweetService.getAllTweets();
 		
 		Assert.assertEquals("FAILURE",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -85,7 +81,7 @@ public class TweetServiceTest {
 		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
 		Mockito.when(userRepo.findByLoginId(Mockito.any())).thenReturn(new User());
 		Mockito.when(tweetRepo.findAllByUserId(Mockito.any())).thenReturn(tweetList);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		TweetResponse response = tweetService.getTweetsForUser("user");
 		
 		Assert.assertEquals("SUCCESS",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -97,7 +93,7 @@ public class TweetServiceTest {
 		tweetList.add(new Tweet());
 		Mockito.when(userRepo.findByLoginId(Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.findAllByUserId(Mockito.anyString())).thenReturn(tweetList);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		TweetResponse response = tweetService.getTweetsForUser("user");
 		
 		Assert.assertEquals("FAILURE",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -109,7 +105,7 @@ public class TweetServiceTest {
 		tweetList.add(new Tweet());
 		Mockito.when(userRepo.findByLoginId(Mockito.any())).thenReturn(new User());
 		Mockito.when(tweetRepo.findAllByUserId(Mockito.anyString())).thenReturn(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		TweetResponse response = tweetService.getTweetsForUser("user");
 		
 		Assert.assertEquals("FAILURE",response.getResponseHeader().getTransactionNotification().getStatus());
@@ -122,7 +118,7 @@ public class TweetServiceTest {
 		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test","test"));
 		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
 		Optional<User> opt = Optional.ofNullable(new User());
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
 		TweetResponse response = tweetService.postTweet(new TweetRequest());
@@ -135,7 +131,7 @@ public class TweetServiceTest {
 		Optional<User> opt = Optional.ofNullable(new User());
 		Mockito.when(userRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		TweetResponse response = tweetService.postTweet(new TweetRequest());
 		
 		Assert.assertEquals("Post Creation Failed",response.getResponseHeader().getTransactionNotification().getRemarks().getMessages().get(0).getDescription());
@@ -144,7 +140,7 @@ public class TweetServiceTest {
 	@Test 
 	public void postTweetSuccessNODataFound() {
 		Optional<User> opt = Optional.ofNullable(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(userRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
 		TweetResponse response = tweetService.postTweet(new TweetRequest());
@@ -155,7 +151,7 @@ public class TweetServiceTest {
 	@Test 
 	public void updateTweetSuccess() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet());
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
 		TweetResponse response = tweetService.updateTweet(new TweetRequest(),"test");
@@ -166,7 +162,7 @@ public class TweetServiceTest {
 	@Test 
 	public void updateTweetInternalServerError() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet());
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(null);
 		TweetResponse response = tweetService.updateTweet(new TweetRequest(),"test");
@@ -177,7 +173,7 @@ public class TweetServiceTest {
 	@Test 
 	public void updateTweetNoDAtaFound() {
 		Optional<Tweet> opt = Optional.ofNullable(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
 		TweetResponse response = tweetService.updateTweet(new TweetRequest(),"test");
@@ -189,7 +185,7 @@ public class TweetServiceTest {
 	@Test 
 	public void deleteTweetSuccess() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet());
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		doNothing().when(tweetRepo).deleteById(Mockito.any());
 		TweetResponse response = tweetService.deleteTweet("test");
@@ -201,7 +197,7 @@ public class TweetServiceTest {
 	@Test 
 	public void deleteTweetFail() {
 		Optional<Tweet> opt = Optional.ofNullable(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		doNothing().when(tweetRepo).deleteById(Mockito.any());
 		TweetResponse response = tweetService.deleteTweet("test");
@@ -216,7 +212,7 @@ public class TweetServiceTest {
 		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test","test"));
 		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","0","0","test"));
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.save(Mockito.any())).thenReturn(new TweetLike());
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
@@ -228,7 +224,7 @@ public class TweetServiceTest {
 	@Test
 	public void likeTweetError() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","0","0","test"));
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.save(Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
@@ -240,7 +236,7 @@ public class TweetServiceTest {
 	@Test
 	public void likeTweetNoData() {
 		Optional<Tweet> opt = Optional.ofNullable(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.save(Mockito.any())).thenReturn(new TweetLike());
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
@@ -252,7 +248,7 @@ public class TweetServiceTest {
 	@Test
 	public void unlikeTweetSuccess() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(new TweetLike("test","test","test")));
 		doNothing().when(tweetLikeRepo).deleteById(Mockito.any());
@@ -265,7 +261,7 @@ public class TweetServiceTest {
 	@Test
 	public void unlikeTweetError() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(new TweetLike("test","test","test")));
 		doNothing().when(tweetLikeRepo).deleteById(Mockito.any());
@@ -278,7 +274,7 @@ public class TweetServiceTest {
 	@Test
 	public void unlikeTweetNoData() {
 		Optional<Tweet> opt = Optional.ofNullable(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		doNothing().when(tweetLikeRepo).deleteById(Mockito.any());
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
@@ -290,7 +286,7 @@ public class TweetServiceTest {
 	@Test
 	public void replyTweetSuccess() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(replyRepo.save(Mockito.any())).thenReturn(new Reply());
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
@@ -302,7 +298,7 @@ public class TweetServiceTest {
 	@Test
 	public void replyTweetError() {
 		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(replyRepo.save(Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
@@ -314,7 +310,7 @@ public class TweetServiceTest {
 	@Test
 	public void replyTweetNoData() {
 		Optional<Tweet> opt = Optional.ofNullable(null);
-		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(replyRepo.save(Mockito.any())).thenReturn(new Reply());
 		Mockito.when(tweetRepo.save(Mockito.any())).thenReturn(new Tweet());
