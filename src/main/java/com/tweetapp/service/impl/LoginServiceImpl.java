@@ -75,6 +75,9 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 			User user = userRepo.save(TweetAppServiceUtil.registerUser(request));
 			if (user != null) {
+				List<User> userList = new ArrayList<>();
+				userList.add(user);
+				response.setData(TweetAppServiceUtil.userDtoMapper(userList));
 				TweetAppServiceUtil.populateMessages(messages, "200", "Success",
 						"Registration Success : " + user.getUserId());
 				TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "0", "SUCCESS", messages);
@@ -107,6 +110,9 @@ public class LoginServiceImpl implements LoginService {
 		if (user != null) {
 
 			if (TweetAppServiceUtil.validatePassword(request.getPassword(), user.getPassword())) {
+				List<User> userList = new ArrayList<>();
+				userList.add(user);
+				response.setData(TweetAppServiceUtil.userDtoMapper(userList));
 				TweetAppServiceUtil.populateMessages(messages, "200", "Success", "Login Success : " + user.getUserId());
 				TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "0", "SUCCESS", messages);
 			} else {

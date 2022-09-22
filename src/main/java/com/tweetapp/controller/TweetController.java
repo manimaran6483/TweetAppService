@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import com.tweetapp.service.TweetService;
  *
  */
 @RestController
+@CrossOrigin
 public class TweetController {
 
 	@Autowired
@@ -43,6 +45,7 @@ public class TweetController {
 	@Value("${tweetapp.kafka.topic}")
 	private String TOPIC = "";
 
+	@Autowired
 	private TweetService tweetService;
 
 	/**

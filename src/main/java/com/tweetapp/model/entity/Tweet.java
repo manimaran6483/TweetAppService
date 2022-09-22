@@ -35,5 +35,5 @@ public class Tweet {
 	
 	private String replyCount;
 
-	
+	private String loginId;
 }

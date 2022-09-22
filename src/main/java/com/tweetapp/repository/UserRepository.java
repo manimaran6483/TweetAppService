@@ -14,6 +14,9 @@ public interface UserRepository extends MongoRepository<User, String> {
 	@Query("{loginId:{$regex:?0,$options:'i'}}")
 	List<User> searchUserByUsername(String userName);
 	
+//	@Query("{loginId:{$in:?0}}")
+//	List<User> findLoginIdByUserIds(List<String> userIds);
+	
 	User findByLoginId(String loginId);
 	
 	boolean existsByLoginId(String loginId);

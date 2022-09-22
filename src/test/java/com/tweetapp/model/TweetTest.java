@@ -16,7 +16,7 @@ public class TweetTest {
 	public void testTweet() {
 		
 		Tweet t = new Tweet();
-		Tweet tt = new Tweet("test", "test", "test", "test", "ttest", "test", "test", "test");
+		Tweet tt = new Tweet("test", "test", "test", "test", "ttest", "test", "test", "test","test");
 		tt.getId();
 		tt.getLikeCount();
 		tt.getReplyCount();
@@ -25,7 +25,9 @@ public class TweetTest {
 		tt.getTweet();
 		tt.getUpdateDate();
 		tt.getUserId();
+		tt.getLoginId();
 		
+		t.setLoginId("test");
 		t.setId("test");
 		t.setLikeCount("test");
 		t.setPostedDate("test");

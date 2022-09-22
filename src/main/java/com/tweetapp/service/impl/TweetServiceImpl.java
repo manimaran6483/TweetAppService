@@ -75,7 +75,7 @@ public class TweetServiceImpl implements TweetService {
 		List<Tweet> tweetList = tweetRepo.findAll();
 
 		if (tweetList != null && !tweetList.isEmpty()) {
-			tweetList = tweetList.stream().sorted((a, b) -> b.getPostedDate().compareTo(a.getPostedDate()))
+			tweetList = tweetList.stream().sorted((a, b) -> b.getUpdateDate().compareTo(a.getUpdateDate()))
 					.collect(Collectors.toList());
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "0", "SUCCESS", messages);
 			response.setData(tweetList);
@@ -103,7 +103,7 @@ public class TweetServiceImpl implements TweetService {
 		User user = userRepo.findByLoginId(username);
 		if (user != null) {
 			List<Tweet> tweetList = tweetRepo.findAllByUserId(user.getUserId());
-			tweetList = tweetList.stream().sorted((a, b) -> b.getPostedDate().compareTo(a.getPostedDate()))
+			tweetList = tweetList.stream().sorted((a, b) -> b.getUpdateDate().compareTo(a.getUpdateDate()))
 					.collect(Collectors.toList());
 			if (tweetList != null && !tweetList.isEmpty()) {
 				TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "0", "SUCCESS", messages);

@@ -17,17 +17,17 @@ public class TweetRequestTest {
 	public void testTweetRequest() {
 		
 		TweetRequest r = new TweetRequest();
-		TweetRequest rr = new TweetRequest(new RequestHeader(), "test", "test", "test");
+		TweetRequest rr = new TweetRequest(new RequestHeader(), "test", "test", "test","test");
 		rr.getRequestHeader();
 		rr.getTag();
 		rr.getTweet();
 		rr.getUserId();
-		
+		rr.getLoginId();
 		r.setRequestHeader(new RequestHeader());
 		r.setTag("tst");
 		r.setTweet("tst");
 		r.setUserId("user");
-		
+		r.setLoginId("test");
 		System.out.println(r.toString());
 	}
 }

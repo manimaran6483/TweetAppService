@@ -61,8 +61,8 @@ public class TweetServiceTest {
 	@Test
 	public void testGetAllTweetsSuccess() {
 		List<Tweet> tweetList= new ArrayList<>();
-		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test"));
-		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test"));
+		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test","test"));
+		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
 		Mockito.when(tweetRepo.findAll()).thenReturn(tweetList);
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		TweetResponse response = tweetService.getAllTweets();
@@ -81,8 +81,8 @@ public class TweetServiceTest {
 	@Test 
 	public void getTweetsForUserSuccess() {
 		List<Tweet> tweetList= new ArrayList<>();
-		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test"));
-		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test"));
+		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test","test"));
+		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
 		Mockito.when(userRepo.findByLoginId(Mockito.any())).thenReturn(new User());
 		Mockito.when(tweetRepo.findAllByUserId(Mockito.any())).thenReturn(tweetList);
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
@@ -119,8 +119,8 @@ public class TweetServiceTest {
 	@Test 
 	public void postTweetSuccess() {
 		List<Tweet> tweetList= new ArrayList<>();
-		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test"));
-		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test"));
+		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test","test"));
+		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
 		Optional<User> opt = Optional.ofNullable(new User());
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(userRepo.findById(Mockito.any())).thenReturn(opt);
@@ -213,9 +213,9 @@ public class TweetServiceTest {
 	@Test
 	public void likeTweetSuccess() {
 		List<Tweet> tweetList= new ArrayList<>();
-		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test"));
-		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test"));
-		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","0","0"));
+		tweetList.add(new Tweet("12","test","test","27-07-2022 01:24:33","test","test","test","test","test"));
+		tweetList.add(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","test","test","test"));
+		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","0","0","test"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.save(Mockito.any())).thenReturn(new TweetLike());
@@ -227,7 +227,7 @@ public class TweetServiceTest {
 	
 	@Test
 	public void likeTweetError() {
-		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","0","0"));
+		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","0","0","test"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.save(Mockito.any())).thenReturn(null);
@@ -251,7 +251,7 @@ public class TweetServiceTest {
 	
 	@Test
 	public void unlikeTweetSuccess() {
-		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0"));
+		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(new TweetLike("test","test","test")));
@@ -264,7 +264,7 @@ public class TweetServiceTest {
 	
 	@Test
 	public void unlikeTweetError() {
-		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0"));
+		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(tweetLikeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(new TweetLike("test","test","test")));
@@ -289,7 +289,7 @@ public class TweetServiceTest {
 	
 	@Test
 	public void replyTweetSuccess() {
-		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0"));
+		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(replyRepo.save(Mockito.any())).thenReturn(new Reply());
@@ -301,7 +301,7 @@ public class TweetServiceTest {
 	
 	@Test
 	public void replyTweetError() {
-		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0"));
+		Optional<Tweet> opt = Optional.ofNullable(new Tweet("12","test","test","28-07-2022 01:24:33","test","test","1","0","test"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(tweetRepo.findById(Mockito.any())).thenReturn(opt);
 		Mockito.when(replyRepo.save(Mockito.any())).thenReturn(null);

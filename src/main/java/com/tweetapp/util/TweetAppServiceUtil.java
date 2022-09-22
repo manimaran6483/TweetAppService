@@ -109,7 +109,7 @@ public class TweetAppServiceUtil {
 
 	public static Tweet postTweet(TweetRequest request) {
 		Tweet tweet = new Tweet(generateRandomTweetId(),request.getTweet(),request.getTag(),getCurrentDate(),getCurrentDate(),
-				request.getUserId(),"0","0");
+				request.getUserId(),"0","0",request.getLoginId());
 		return tweet;
 	}
 

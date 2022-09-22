@@ -107,7 +107,7 @@ public class TweetControllerTest {
 	public void testPostTweet() throws Exception {
 		Mockito.when(tweetService.postTweet(Mockito.any())).thenReturn(getvalidResponse("0","SUCCESS"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
-		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test");
+		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test","test");
 		request.getRequestHeader().setTransactionId("test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/{username}/add","test").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -121,7 +121,7 @@ public class TweetControllerTest {
 	public void testPostTweetException() throws Exception {
 		Mockito.when(tweetService.postTweet(Mockito.any())).thenThrow(new RuntimeException());
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
-		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test");
+		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test","test");
 		request.getRequestHeader().setTransactionId("test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/{username}/add","test").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -135,7 +135,7 @@ public class TweetControllerTest {
 	public void testUpdateTWeet() throws Exception {
 		Mockito.when(tweetService.updateTweet(Mockito.any(),Mockito.any())).thenReturn(getvalidResponse("0","SUCCESS"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
-		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test");
+		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test","test");
 		request.getRequestHeader().setTransactionId("test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/{username}/update/{id}","test","test").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -148,7 +148,7 @@ public class TweetControllerTest {
 	public void testUpdateTWeetException() throws Exception {
 		Mockito.when(tweetService.updateTweet(Mockito.any(),Mockito.any())).thenThrow(new RuntimeException());
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
-		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test");
+		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test","test");
 		request.getRequestHeader().setTransactionId("test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/{username}/update/{id}","test","test").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -162,7 +162,7 @@ public class TweetControllerTest {
 	public void testDeleteTweet() throws Exception {
 		Mockito.when(tweetService.deleteTweet(Mockito.any())).thenReturn(getvalidResponse("0","SUCCESS"));
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
-		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test");
+		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test","test");
 		request.getRequestHeader().setTransactionId("test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/{username}/delete/{id}","test","test").contentType(MediaType.APPLICATION_JSON)
 				.header("transactionId", "id").content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();
@@ -176,7 +176,7 @@ public class TweetControllerTest {
 	public void testDeleteTweetException() throws Exception {
 		Mockito.when(tweetService.deleteTweet(Mockito.any())).thenThrow(new RuntimeException());
 		Mockito.when(kafkaTemplate.send(Mockito.any(),Mockito.any())).thenReturn(null);
-		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test");
+		TweetRequest request = new TweetRequest(new RequestHeader(),"test","test","test","test");
 		request.getRequestHeader().setTransactionId("test");
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/{username}/delete/{id}","test","test").contentType(MediaType.APPLICATION_JSON)
 				.header("transactionId", "id").content(mapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)).andReturn();

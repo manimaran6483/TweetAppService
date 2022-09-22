@@ -26,12 +26,14 @@ public class TweetRequest {
 	private String tweet;
 
 	@NotNull(message = "Mandatory Field - tag should not be null")
-	@NotBlank(message = "Mandatory Field - tag should not be blank")
+	//@NotBlank(message = "Mandatory Field - tag should not be blank")
 	private String tag;
 
 	@NotNull(message = "Mandatory Field - userId should not be null")
 	@NotBlank(message = "Mandatory Field - userId should not be blank")
 	private String userId;
 
-
+	@NotNull(message = "Mandatory Field - loginId should not be null")
+	@NotBlank(message = "Mandatory Field - loginId should not be blank")
+	private String loginId;
 }
