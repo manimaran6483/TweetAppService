@@ -1,9 +1,6 @@
 package com.tweetapp.model.entity;
 
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
@@ -22,7 +19,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Reply {
 
-	@Id
 	@DynamoDBHashKey(attributeName = "id")
 	private String id;
 	
