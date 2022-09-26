@@ -201,7 +201,7 @@ public class LoginServiceImpl implements LoginService {
 		log.debug( NAME + " searchByUserName start - " + username);
 		UserResponse response = new UserResponse();
 		List<Message> messages = new ArrayList<>();
-		List<User> userList = userRepo.searchUserByUsername(username);
+		List<User> userList = userRepo.searchByUsername(username);
 		if (userList != null && !userList.isEmpty()) {
 
 			List<UserDTO> userDTOList = TweetAppServiceUtil.userDtoMapper(userList);

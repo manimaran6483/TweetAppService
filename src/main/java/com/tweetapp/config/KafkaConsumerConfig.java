@@ -1,4 +1,4 @@
-package com.tweetapp.kafka;
+package com.tweetapp.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
