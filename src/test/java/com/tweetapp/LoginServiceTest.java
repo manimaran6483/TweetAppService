@@ -61,7 +61,7 @@ public class LoginServiceTest {
 	public void testSearchByUserName() {
 		List<User> userList = new ArrayList<>();
 		userList.add(new User("test", "test", "test", "test", "test", "test", "test", "test"));
-		Mockito.when(userRepo.searchUserByUsername(Mockito.any())).thenReturn(userList);
+		Mockito.when(userRepo.searchByUsername(Mockito.any())).thenReturn(userList);
 		
 		UserResponse response = loginService.searchByUserName("test");
 		
@@ -72,7 +72,7 @@ public class LoginServiceTest {
 	public void testSearchByUserNameFail() {
 		List<User> userList = new ArrayList<>();
 		userList.add(new User("test", "test", "test", "test", "test", "test", "test", "test"));
-		Mockito.when(userRepo.searchUserByUsername(Mockito.any())).thenReturn(null);
+		Mockito.when(userRepo.searchByUsername(Mockito.any())).thenReturn(null);
 		
 		UserResponse response = loginService.searchByUserName("test");
 		Assert.assertEquals("FAILURE",response.getResponseHeader().getTransactionNotification().getStatus());

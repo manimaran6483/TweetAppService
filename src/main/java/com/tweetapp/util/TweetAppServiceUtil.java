@@ -153,7 +153,7 @@ public class TweetAppServiceUtil {
 
 	public static Tweet incrementReplyCount(Tweet tweet) {
 		int replyCount = Integer.parseInt(tweet.getReplyCount());
-		tweet.setLikeCount(String.valueOf(++replyCount));
+		tweet.setReplyCount(String.valueOf(++replyCount));
 		return tweet;
 	}
 
