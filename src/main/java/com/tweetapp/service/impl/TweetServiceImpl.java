@@ -204,7 +204,7 @@ public class TweetServiceImpl implements TweetService {
 		List<Message> messages = new ArrayList<>();
 		Optional<Tweet> tweetById = tweetRepo.findById(tweetId);
 		if (tweetById.isPresent()) {
-			tweetRepo.deleteById(tweetId);
+			tweetRepo.deleteById(tweetById.get());
 			TweetAppServiceUtil.populateMessages(messages, "204", "Deleted", "Post deleted");
 			TweetAppServiceUtil.populateResponseHeader(response.getResponseHeader(), "0", "SUCCESS", messages);
 

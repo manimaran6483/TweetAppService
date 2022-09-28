@@ -154,7 +154,7 @@ public class TweetController {
 
 		log.debug( NAME + ": deleteTweet - end - " + transactionId);
 		response.getResponseHeader().getTransactionNotification().setTransactionId(transactionId);
-		return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	/**

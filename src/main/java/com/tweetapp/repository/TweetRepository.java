@@ -79,7 +79,7 @@ public class TweetRepository{
 		return returnedList;
 	}
 	
-	 public void deleteById(String tweetId) {
+	 public void deleteById(Tweet tweetId) {
 	        mapper.delete(tweetId);
 	 }
 }
