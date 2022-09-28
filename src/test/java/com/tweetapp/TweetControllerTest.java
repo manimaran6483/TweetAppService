@@ -167,7 +167,7 @@ public class TweetControllerTest {
 		
 		String status = String.valueOf(result.getResponse().getStatus());
 		
-		assertEquals("204", status);
+		assertEquals("200", status);
 	}
 	
 	@Test
@@ -181,7 +181,7 @@ public class TweetControllerTest {
 		
 		String status = String.valueOf(result.getResponse().getStatus());
 		
-		assertEquals("204", status);
+		assertEquals("200", status);
 	}
 	@Test
 	public void testLikeTweet() throws Exception{
